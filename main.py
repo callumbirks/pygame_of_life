@@ -1,8 +1,11 @@
-import engine
+import getopt
+import sys
+from math import floor
+
 import funcy
 import pygame as pg
-from math import floor
-import sys, getopt
+
+import engine
 
 
 def main(argv):
@@ -24,22 +27,39 @@ def main(argv):
     background.fill((16, 16, 16))
     screen.blit(background, (0, 0))
     pg.display.flip()
+    clock = pg.time.Clock()
 
     sim_running = False
     alive_cells = frozenset()
     last_pos = -1
 
     while 1:
+        clock.tick(60)
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 return
-        left, middle, right = pg.mouse.get_pressed()
-        if left:
-            pos = funcy.walk(lambda p: floor(p / pixel_mult), pg.mouse.get_pos())
-            pos = pos[1] * grid_size + pos[0]
-            if (pos != last_pos):
-                last_pos = pos
-                alive_cells = alive_cells ^ frozenset({pos})
+            if event.type == pg.KEYDOWN:
+                if event.key == pg.K_SPACE:
+                    sim_running = not sim_running
+                elif event.key == pg.K_c:
+                    alive_cells = frozenset()
+        if sim_running:
+            clock.tick(5)
+            alive_cells = engine.step(grid_size, alive_cells)
+        else:
+            left, middle, right = pg.mouse.get_pressed()
+            if left:
+                pos = funcy.walk(lambda p: floor(p / pixel_mult), pg.mouse.get_pos())
+                pos = pos[1] * grid_size + pos[0]
+                if (pos != last_pos):
+                    last_pos = pos
+                    alive_cells = alive_cells ^ frozenset({pos})
+
+        cell_coords = funcy.map(lambda c: (c % grid_size, floor(c / grid_size)), alive_cells)
+        background.fill((16, 16, 16))
+        for cell in cell_coords:
+            pg.draw.rect(background, (250, 250, 250),
+                         (cell[0] * pixel_mult, cell[1] * pixel_mult, pixel_mult, pixel_mult))
         screen.blit(background, (0, 0))
         pg.display.flip()
 
