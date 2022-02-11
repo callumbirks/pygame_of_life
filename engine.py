@@ -11,7 +11,9 @@ def step(size: int, alive_cells_prev: frozenset):
         my_neighbours = [cell - size - 1, cell - size, cell - size + 1,
                          cell - 1, cell + 1,
                          cell + size - 1, cell + size, cell + size + 1]
-        neighbour_count = len(select(lambda p: p in alive_cells_prev, my_neighbours))
+        neighbour_count = len(select(lambda p: p in alive_cells_prev and
+                                               (cell % size - 1) <= p % size <= (cell % size + 1)
+                                     , my_neighbours))
         return True if neighbour_count == 3 or cell in alive_cells_prev and neighbour_count == 2 else False
 
     return select(will_live, frozenset(range(0, size * size)))

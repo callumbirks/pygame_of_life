@@ -11,7 +11,7 @@ import engine
 def main(argv):
     try:
         opts, args = getopt.getopt(argv, "h:")
-        grid_size = args[0] if opts[0] == 'h' else 100
+        grid_size = int(opts[0][1]) if opts[0][0] == '-h' else 100
     except IndexError or getopt.GetoptError:
         print("usage: main.py -h <grid height>")
         sys.exit(1)
