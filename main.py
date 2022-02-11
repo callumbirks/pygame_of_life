@@ -32,6 +32,7 @@ def main(argv):
     sim_running = False
     alive_cells = frozenset()
     last_pos = -1
+    sim_speed = 6
 
     while 1:
         clock.tick(60)
@@ -43,8 +44,13 @@ def main(argv):
                     sim_running = not sim_running
                 elif event.key == pg.K_c:
                     alive_cells = frozenset()
+                elif event.key == pg.K_UP:
+                    sim_speed = sim_speed + 3
+                elif event.key == pg.K_DOWN and sim_speed > 3:
+                    sim_speed = sim_speed - 3
+
         if sim_running:
-            clock.tick(5)
+            clock.tick(sim_speed)
             alive_cells = engine.step(grid_size, alive_cells)
         else:
             left, middle, right = pg.mouse.get_pressed()

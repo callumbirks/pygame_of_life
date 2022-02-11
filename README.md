@@ -11,3 +11,4 @@ The grid is a square grid of _grid_height * grid_height_ cells.
 When launched the GUI is in drawing mode and clicking the left mouse will draw alive cells.
 Pressing _c_ will clear the grid.
 The simulation can be started and stopped using _Space_.
+Pressing _Up_ or _Down_ makes the simulation faster or slower, respectively.
